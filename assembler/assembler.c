@@ -198,6 +198,10 @@ int main(int argc, char *argv[])
           }
         }
       }
+    } else {
+      printf("error: unrecognized opcode\n");
+      printf("%s", opcode);
+      exit(1);
     }
     current_address++;
   }
