@@ -102,6 +102,8 @@ int main(int argc, char *argv[])
         for(int i = 0; i < label_total; i++){
           if(!strcmp(label_name[i], arg2)){
             bit_2 = *(label_address + i);
+            // printf("%s %s %d\n", label_name[i], arg2, bit_2);
+            break;
           }
         }
       }
@@ -124,11 +126,17 @@ int main(int argc, char *argv[])
       bit_0 = (int)(*arg0 - '0');
       bit_1 = (int)(*arg1 - '0');
       if(isNumber(arg2)){
-        bit_2 = (int)(*arg2 - '0');
+        if (strlen(arg2) == 1) {
+          bit_2 = (int)(*arg2 - '0');
+        } else {
+          bit_2 = atoi(arg2);
+        }
       } else {
+        // printf("isNotNumber\n");
         for(int i = 0; i < label_total; i++){
           if(!strcmp(label_name[i], arg2)){
             bit_2 = *(label_address + i);
+            break;
           }
         }
       }
@@ -149,6 +157,7 @@ int main(int argc, char *argv[])
         for(int i = 0; i < label_total; i++){
           if(!strcmp(label_name[i], arg2)){
             bit_2 = *(label_address + i) - current_address - 1;
+            break;
           }
         }
       }
@@ -185,6 +194,7 @@ int main(int argc, char *argv[])
         for(int i = 0; i < label_total; i++){
           if(!strcmp(label_name[i], arg0)){
             fprintf(outFilePtr, "%d\n", *(label_address + i));
+            break;
           }
         }
       }
