@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
   int label_total = 0;
   int current_address = 0;
   int bit_opcode, bit_0, bit_1, bit_2, instruction;
+  int undefine = 1;
 
   if (argc != 3) {
     printf("error: usage: %s <assembly-code-file> <machine-code-file>\n",
@@ -53,12 +54,23 @@ int main(int argc, char *argv[])
     current_address++;
   }
 
-  /* this is how to rewind the file ptr so that you start reading from the
-  beginning of the file */
   rewind(inFilePtr);
   label_total = label_i + 1;
-
   current_address = 0;
+
+  /*  exception duplicated labels */
+  printf("\n");
+  for(int i = 0; i < label_total; i++) {
+    for(int j = i + 1; j < label_total; j++) {
+      if (!strcmp(label_name[i], label_name[j])) {
+        printf("error: duplicated labels\n");
+        printf("duplicated label: %s\n", label_name[i]);
+        exit(1);
+      }
+    }
+  }
+
+
   while(1){
     if (! readAndParse(inFilePtr, label, opcode, arg0, arg1, arg2) ) {
       /* reached end of file */
@@ -92,11 +104,19 @@ int main(int argc, char *argv[])
       if(isNumber(arg2)){
         bit_2 = (int)(*arg2 - '0');
       } else {
+        undefine = 1;
         for(int i = 0; i < label_total; i++){
           if(!strcmp(label_name[i], arg2)){
+            undefine = 0;
             bit_2 = *(label_address + i);
             break;
           }
+        }
+        /* undefined labels */
+        if (undefine) {
+          printf("error: undefined labels\n");
+          printf("undefined label: %s\n", arg2);
+          exit(1);
         }
       }
       bit_opcode = bit_opcode << 22;
@@ -115,11 +135,19 @@ int main(int argc, char *argv[])
           bit_2 = atoi(arg2);
         }
       } else {
+        undefine = 1;
         for(int i = 0; i < label_total; i++){
           if(!strcmp(label_name[i], arg2)){
+            undefine = 0;
             bit_2 = *(label_address + i);
             break;
           }
+        }
+        /* undefined labels */
+        if (undefine) {
+          printf("error: undefined labels\n");
+          printf("undefined label: %s\n", arg2);
+          exit(1);
         }
       }
 
@@ -136,11 +164,18 @@ int main(int argc, char *argv[])
       if(isNumber(arg2)){
         bit_2 = (int)(*arg2 - '0');
       } else {
+        undefine = 1;
         for(int i = 0; i < label_total; i++){
           if(!strcmp(label_name[i], arg2)){
+            undefine = 0;
             bit_2 = *(label_address + i) - current_address - 1;
             break;
           }
+        }
+        if (undefine) {
+          printf("error: undefined labels\n");
+          printf("undefined label: %s\n", arg2);
+          exit(1);
         }
       }
 
@@ -182,7 +217,7 @@ int main(int argc, char *argv[])
       }
     } else {
       printf("error: unrecognized opcode\n");
-      printf("%s", opcode);
+      printf("%s\n", opcode);
       exit(1);
     }
     current_address++;

@@ -19,6 +19,9 @@ int main(int argc, char *argv[])
   char line[MAXLINELENGTH];
   stateType state;
   FILE *filePtr;
+  // my variables
+  int i;
+
   if (argc != 2) {
     printf("error: usage: %s <machine-code file>\n", argv[0]);
     exit(1);
@@ -30,12 +33,21 @@ int main(int argc, char *argv[])
   }
   /* read in the entire machine-code file into memory */
   for (state.numMemory = 0; fgets(line, MAXLINELENGTH, filePtr) != NULL; state.numMemory++) {
-  if (sscanf(line, "%d", state.mem+state.numMemory) != 1) {
-    printf("error in reading address %d\n", state.numMemory);
-    exit(1);
+    if (sscanf(line, "%d", state.mem+state.numMemory) != 1) {
+      printf("error in reading address %d\n", state.numMemory);
+      exit(1);
+    }
+    printf("memory[%d]=%d\n", state.numMemory, state.mem[state.numMemory]);
   }
-  printf("memory[%d]=%d\n", state.numMemory, state.mem[state.numMemory]);
+
+  for (i = 0; i < NUMREGS; i++){
+    state.reg[i] = 0;
   }
+
+  // for (i = 0; i < state.numMemory; i++) {
+  //   state.pc++;
+  //   printstate(&state);
+  // }
   return(0);
 }
 
@@ -46,11 +58,11 @@ void printState(stateType *statePtr)
   printf("\tpc %d\n", statePtr->pc);
   printf("\tmemory:\n");
   for (i=0; i<statePtr->numMemory; i++) {
-  printf("\t\tmem[ %d ] %d\n", i, statePtr->mem[i]);
+    printf("\t\tmem[ %d ] %d\n", i, statePtr->mem[i]);
   }
   printf("\tregisters:\n");
   for (i=0; i<NUMREGS; i++) {
-  printf("\t\treg[ %d ] %d\n", i, statePtr->reg[i]);
+    printf("\t\treg[ %d ] %d\n", i, statePtr->reg[i]);
   }
   printf("end state\n");
 }
