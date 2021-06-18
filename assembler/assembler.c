@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #define MAXLINELENGTH 1000
+#define NUMMEMORY 65536
 
 int readAndParse(FILE *, char *, char *, char *, char *, char *);
 int isNumber(char *);
@@ -12,8 +13,8 @@ int main(int argc, char *argv[])
   char *inFileString, *outFileString;
   FILE *inFilePtr, *outFilePtr;
   char label[MAXLINELENGTH], opcode[MAXLINELENGTH], arg0[MAXLINELENGTH], arg1[MAXLINELENGTH], arg2[MAXLINELENGTH];
-  char label_name[10][50];
-  int label_address[50];
+  char label_name[10][NUMMEMORY];
+  int label_address[NUMMEMORY];
   int label_i = 0;
   int label_total = 0;
   int current_address = 0;
@@ -47,7 +48,6 @@ int main(int argc, char *argv[])
     if (strlen(label)) {
       strcpy(label_name[label_i], label);
       label_address[label_i] = current_address;
-      // printf("%s %d\n", label_name[label_i], label_address[label_i]);
       label_i++;
     }
     current_address++;
@@ -64,13 +64,6 @@ int main(int argc, char *argv[])
       /* reached end of file */
       break;
     }
-    // printf("label:%s\t\t", label);
-    // printf("opcode:%s\t\t", opcode);
-    // printf("arg0:%s\t\t", arg0);
-    // printf("arg1:%s\t\t", arg1);
-    // printf("arg2:%s\n", arg2);
-
-
     if (!strcmp(opcode, "add")) {
       /* do whatever you need to do for opcode "add" */
       bit_opcode = 0;
@@ -102,23 +95,13 @@ int main(int argc, char *argv[])
         for(int i = 0; i < label_total; i++){
           if(!strcmp(label_name[i], arg2)){
             bit_2 = *(label_address + i);
-            // printf("%s %s %d\n", label_name[i], arg2, bit_2);
             break;
           }
         }
       }
-
-      // printf("%x %x %x %x\n", bit_opcode, bit_0, bit_1, bit_2);
-
       bit_opcode = bit_opcode << 22;
       bit_0 = bit_0 << 19;
       bit_1 = bit_1 << 16;
-
-      // printf("o:%x\n", bit_opcode);
-      // printf("0:%x\n", bit_0);
-      // printf("1:%x\n", bit_1);
-      // printf("2:%x\n", bit_2);
-
       instruction = bit_opcode | bit_0 | bit_1 | bit_2;
       fprintf(outFilePtr, "%d\n", instruction);
     } else if (!strcmp(opcode, "sw")) {
@@ -132,7 +115,6 @@ int main(int argc, char *argv[])
           bit_2 = atoi(arg2);
         }
       } else {
-        // printf("isNotNumber\n");
         for(int i = 0; i < label_total; i++){
           if(!strcmp(label_name[i], arg2)){
             bit_2 = *(label_address + i);
