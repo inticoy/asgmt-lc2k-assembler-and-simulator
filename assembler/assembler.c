@@ -119,6 +119,13 @@ int main(int argc, char *argv[])
           exit(1);
         }
       }
+      /* offsetField that don't fit in 16 bits */
+      if ((bit_2 > 32767) || (bit_2 < -32768)){
+        printf("error: offset field don't fit in 16 bits\n");
+        exit(1);
+      }
+
+
       bit_opcode = bit_opcode << 22;
       bit_0 = bit_0 << 19;
       bit_1 = bit_1 << 16;
@@ -151,6 +158,12 @@ int main(int argc, char *argv[])
         }
       }
 
+      /* offsetField that don't fit in 16 bits */
+      if ((bit_2 > 32767) || (bit_2 < -32768)){
+        printf("error: offset field don't fit in 16 bits\n");
+        exit(1);
+      }
+
       bit_opcode = bit_opcode << 22;
       bit_0 = bit_0 << 19;
       bit_1 = bit_1 << 16;
@@ -177,6 +190,12 @@ int main(int argc, char *argv[])
           printf("undefined label: %s\n", arg2);
           exit(1);
         }
+      }
+
+      /* offsetField that don't fit in 16 bits */
+      if ((bit_2 > 32767) || (bit_2 < -32768)){
+        printf("error: offset field don't fit in 16 bits\n");
+        exit(1);
       }
 
       bit_opcode = bit_opcode << 22;
