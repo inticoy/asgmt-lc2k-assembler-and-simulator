@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <string.h>
 #define MAXLINELENGTH 1000
-#define NUMMEMORY 65536
 
 int readAndParse(FILE *, char *, char *, char *, char *, char *);
 int isNumber(char *);
@@ -13,8 +12,8 @@ int main(int argc, char *argv[])
   char *inFileString, *outFileString;
   FILE *inFilePtr, *outFilePtr;
   char label[MAXLINELENGTH], opcode[MAXLINELENGTH], arg0[MAXLINELENGTH], arg1[MAXLINELENGTH], arg2[MAXLINELENGTH];
-  char label_name[10][NUMMEMORY];
-  int label_address[NUMMEMORY];
+  char label_name[10][200];
+  int label_address[200];
   int label_i = 0;
   int label_total = 0;
   int current_address = 0;
