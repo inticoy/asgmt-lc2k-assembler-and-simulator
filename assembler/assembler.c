@@ -55,11 +55,10 @@ int main(int argc, char *argv[])
   }
 
   rewind(inFilePtr);
-  label_total = label_i + 1;
+  label_total = label_i;
   current_address = 0;
 
   /*  exception duplicated labels */
-  printf("\n");
   for(int i = 0; i < label_total; i++) {
     for(int j = i + 1; j < label_total; j++) {
       if (!strcmp(label_name[i], label_name[j])) {
@@ -119,6 +118,8 @@ int main(int argc, char *argv[])
           exit(1);
         }
       }
+
+
       /* offsetField that don't fit in 16 bits */
       if ((bit_2 > 32767) || (bit_2 < -32768)){
         printf("error: offset field don't fit in 16 bits\n");
